@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -14,8 +16,6 @@ class Post(models.Model):
         ('publicado', 'Publicado')
     )
 
-
-
     titulo = models.CharField(max_length=250)
     slug   = models.SlugField(max_length=250)
     autor  = models.ForeignKey(User, on_delete = models.CASCADE)
@@ -28,6 +28,10 @@ class Post(models.Model):
 
     objects   = models.Manager()
     published = PublishedManager()
+
+    def get_absolute_url(self):
+        #return reverse('post_detail', args = [self.pk])
+        return reverse('post_detail', args = [self.slug])
 
     class Meta:
         ordering = ('-publicado',)
